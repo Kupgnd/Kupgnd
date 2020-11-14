@@ -1,0 +1,56 @@
+#include "mbed.h"
+#include "ultrasonic.h"
+
+DigitalOut close (p28);
+DigitalOut closer (p26);
+DigitalOut remote1 (LED1);
+DigitalOut remote2 (LED2);
+DigitalOut remote3 (LED3);
+DigitalOut remote4 (LED4);
+AnalogIn trig (p17);
+AnalogOut echo (p18);
+
+ void dist(int distance)
+{
+    if(distance < 200 && distance > 100)
+    { 
+        remote1 =1;
+        remote2 =1;
+        remote3 =1;
+        remote4 =1;
+        }
+        else
+        {
+            remote1 =0;
+            remote2 =0;
+            remote3 =0;
+            remote4 =0;
+            }
+        
+    if(distance < 100 && distance > 50)
+    {
+        wait (0.5);
+        close = 1;
+        wait (0.5);
+        close = 0;
+        }
+        else if(distance < 50)
+        {
+            wait(0.2);
+            closer = 1;
+            wait(0.2);
+            closer = 0;
+            }
+    }
+    
+ultrasonic mu(p17, p18, 0.1, 1, &dist);
+
+
+int main()
+{
+    mu.startUpdates();
+    while(1)
+    {
+        mu.checkDistance();
+    }
+} 
